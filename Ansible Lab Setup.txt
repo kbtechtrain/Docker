@@ -1,0 +1,66 @@
+Ansible Setup Lab
+
+	1. Setup Ubuntu Vm
+	2. Change HostName
+		$ sudo su -
+		$ sudo vi /etc/hostname
+		$ sudo vi /etc/hosts
+		$ sudo apt-get install net-tools
+		$ sudo apt-get install openssh-server
+	3. Add User
+		$ sudo su -
+		$ sudo useradd -m ansadmin -s /bin/bash
+		$ sudo passwd ansadmin
+	4. Add user to sudo file
+		visudo
+		Add line 'ansadmin ALL=(ALL)  NOPASSWD: ALL'  under root user [prefer this one]
+		(or) - $ sudo usermod -aG sudo ansadmin 
+	5. Now switch to ansadmin
+		$ sudo su - ansadmin
+	6. Generate ssh kays from ansadmin
+		$ ssh-keygen
+		Keys will stored under .ssh directory.
+		$ cd .ssh
+		$ ls
+		id_rsa - Private kay resides in the server
+		id_rsa.pub - Public key copied to Managed node
+	7. Enable password based authentication (for cloud VMs)
+		goto root
+		sudo vi /etc/ssh/sshd_config
+	Find out and remove the comment hash for 'PasswordAuthetication yes' then add comment to 'PasswordAuthetication  no'
+		restart the service
+		$ sudo systemctl restart sshd.service
+	8. Install Ansible
+		$ sudo su - [root]
+		$ sudo apt-get update
+		$ sudo apt-get install software-properties-common
+		$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+		$ sudo apt-get install ansible [If ansible installed properly skip to 11.]
+	[While installing ansible if you get any path warning, consider add the directory to the PATH by editing the current 	profile.
+		$ sudo vi /etc/profile
+	and Add the line at the bottom
+		export PATH="/home/ansadmin/.local/bin:$PATH"]
+		$ ansible --version
+	9. Download and copy ansible-config file to /etc/ansible [if you are installing ansible using pip, ansible.cfg file do 	not ceate automatically. We need to create the /etc/ansible and copy the /cfg file from Ansible official site.]
+		$ sudo mkdir /etc/ansible
+	Go to Ansible official website and get the config file
+	url: https://gist.github.com/alivx/2a4ca3e577ead4bd38d247c258e6513b [You can browse ansible.cfg in google to get the 	latest one]
+		$ sudo vi /etc/ansible/ansible.cfg
+	Paste the content of cfg file and save.
+	10. Create one more file 'hosts' in the same directory where it holds all the hosts information
+		touch hosts
+	11. Create one or two managed nodes
+		Setup Hostname
+		Install net-tools
+		Install openssh-server
+		Create user ansadmin
+		Add user to sudo file
+		Enable password based Authentication (For Cloud VMs)
+	12. Now add the managed node to Ansible server
+		Open the /etc/ansible/hosts file in Ansible server
+		Copy the ipaddress of the Managed node and paste it in hosts file.
+		Copy the private key to managed node
+		change to ansadmin user and run
+		$ ssh-copy-id <managed node ip address>
+		Now run
+		$ ssh <managed node ipaddress> to connect to Managed node.
