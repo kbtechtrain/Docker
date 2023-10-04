@@ -7,10 +7,10 @@ Ansible Setup Lab
 		$ sudo vi /etc/hosts
 		$ sudo apt-get install net-tools
 		$ sudo apt-get install openssh-server
-	3. Add User
-		$ sudo su -
-		$ sudo useradd -m ansadmin -s /bin/bash
-		$ sudo passwd ansadmin
+
+	600. This is a added line (Dummy)	600. This is a added line (Dummy)	600. This is a added line (Dummy)
+
+
 	4. Add user to sudo file
 		visudo
 		Add line 'ansadmin ALL=(ALL)  NOPASSWD: ALL'  under root user [prefer this one]
